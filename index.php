@@ -1,10 +1,14 @@
-
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Support</title>
     <style>
         body {
@@ -160,7 +164,7 @@
 
 
 <body>
-     <header>
+    <header>
         <div class="topheader">
             <div class="container" style="text-align: right;">
 
@@ -207,23 +211,26 @@
         </div>
 
     </div>
-    </div> 
+    </div>
     <form method="post" onsubmit="return sub()">
         <div id="container1">
             <h1>Support</h1>
 
             <div class="row">
                 <div class="col-25"><label for="name">Name</label></div>
-                <div class="col-75"><input type="text" id="name" name="namee" placeholder="Your Name" required autocomplete="off"></div>
+                <div class="col-75"><input type="text" id="name" name="namee" placeholder="Your Name" required
+                        autocomplete="off"></div>
             </div>
             <div class="row">
                 <div class="col-25"><label for="company">Company </label></div>
-                <div class="col-75"><input type="text" id="company" name="company" placeholder="Your Company Name" required autocomplete="off">
+                <div class="col-75"><input type="text" id="company" name="company" placeholder="Your Company Name"
+                        required autocomplete="off">
                 </div>
             </div>
             <div class="row">
                 <div class="col-25"><label for="email">Email</label></div>
-                <div class="col-75"><input type="email" id="email" name="email" placeholder="Your Email ID" required autocomplete="off">
+                <div class="col-75"><input type="email" id="email" name="email" placeholder="Your Email ID" required
+                        autocomplete="off">
                 </div>
             </div>
             <div class="row">
@@ -235,12 +242,20 @@
 
             <div class="row">
                 <div class="col-25"><label for="msg">Support For</label></div>
-                <div class="col-75"><textarea id="msg" name="msg" placeholder="Support For" cols="25"
-                        rows="5" required autocomplete="off"></textarea>
+                <div class="col-75"><textarea id="msg" name="msg" placeholder="Support For" cols="25" rows="5" required
+                        autocomplete="off"></textarea>
 
                 </div>
             </div>
             <div>
+                <div class="row">
+                    <div><label for="subject">Enter Security Code</label></div>
+                    <div><img src="captcha.php?rand=1944631720abcABC" id="captchaimg" alt="captcha" title="mini"><input
+                            placeholder="Captcha" type="text" tabindex="2" id="captcha_code" name="captcha_code"
+                            required><br>Can't read the above code? <a class="ccc" href="javascript:void(0);"
+                            onClick="refresh_captcha();">Refresh</a>
+                    </div>
+                </div>
                 <center><input type="submit" value="Submit" name="submit"></a></center>
             </div>
 
@@ -249,34 +264,41 @@
 
     </div>
     </div>
+   
+      <script>function refresh_captcha() { 
+      return document.getElementById("captcha_code").value="",document.getElementById("captcha_code").focus(),document.images.captchaimg.src=document.images.captchaimg.src.substring(0,document.images.captchaimg.src.lastIndexOf("?"))+"?rand="+1e3*Math.random()
+      }</script>
 
     </head>
     <?php
     include("config.php");
-    //error_reporting(0);
+  
+    error_reporting(0);
     
-    if ($_SERVER["REQUEST_METHOD"] == "POST"){
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $incaptcha = $_POST['captcha_code'];
         $namee = $_POST['namee'];
         $company = $_POST['company'];
         $email = $_POST['email'];
         $mobile = $_POST['mobile'];
         $msg = $_POST['msg'];
-    $sql = "INSERT INTO `info` VALUES('','$namee','$company','$email','$mobile','$msg')";
-    $result = mysqli_query($conn,$sql);
-    if($result){
-       echo '<script>alert("Your data added successfully")</script>';
-        echo "<script>window.location.href='viewuser.php'</script>";
-        $to= $_POST['email'];
-	  			$cc=$_POST['email'];
-					$from='admin@mina.kitret.com';
-					$sub='Order form details from Pooja Hosting.';
-					$headers="From: $from\r\n" .
-					"Cc: $cc \r\n".
-				   'X-Mailer: PHP/' . phpversion() . "\r\n" .
-				   "MIME-Version: 1.0\r\n" .
-				   "Content-Type: text/html; charset=utf-8\r\n" .
-				   "Content-Transfer-Encoding: 8bit\r\n\r\n";
-		$mess="<!DOCTYPE html><html><head>
+        $sql = "INSERT INTO `info` VALUES('','$namee','$company','$email','$mobile','$msg')";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            if ($_SESSION['captcha_code']==$incaptcha ){
+            echo '<script>alert("Your data added successfully")</script>';
+            echo "<script>window.location.href='viewuser.php'</script>";
+            $to = $_POST['email'];
+            $cc = $_POST['email'];
+            $from = 'info@mina.kitret.com';
+            $sub = 'Order form details from Pooja Hosting.';
+            $headers = "From: $from\r\n" .
+                "Cc: $cc \r\n" .
+                'X-Mailer: PHP/' . phpversion() . "\r\n" .
+                "MIME-Version: 1.0\r\n" .
+                "Content-Type: text/html; charset=utf-8\r\n" .
+                "Content-Transfer-Encoding: 8bit\r\n\r\n";
+            $mess = "<!DOCTYPE html><html><head>
 				<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 				<title>Enquery Details</title></head><body>
 				<table width='1000' border='0' align='center' cellspacing=2 cellpadding='5' bordercolor='#1D2E7E' bgcolor='#1D2E7E'>
@@ -306,19 +328,20 @@
      
 			<tr>
 			  <td bgcolor='#FFFFFF'><strong>Date</strong></td>
-			  <td bgcolor='#FFFFFF'>".date("F j, Y, g:i a")."</td>
+			  <td bgcolor='#FFFFFF'>" . date("F j, Y, g:i a") . "</td>
 			</tr>
 		</table></body></html>";
-        $ee=mail($to,$sub,$mess,$headers);
-        echo "<script>window.location.href='viewuser.php'</script>";
+            $ee = mail($to, $sub, $mess, $headers);
+            echo "<script>window.location.href='viewuser.php'</script>";
+        } else {
+            echo "<script>alert('Incorrect Captcha')</script>";
+        }
     }
-    
     else{
-        echo "Failed to add your data";
+        echo "your data failed to submit";
     }
 }
     ?>
 </body>
 
 </html>
- 

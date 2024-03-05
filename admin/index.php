@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background-color: #f8f9fa;
         }
         .head {
-            background-color: #EADBC8;
+            background-color: #86A7FC;
             padding: 30px;
             width: fit-content;
             margin-bottom: 20px;
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: auto;
             padding: 20px;
             border-radius: 10px;
-            background-color: #fff;
+            background-color: #EEF5FF;
             box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
             padding-right: 10px;
             
@@ -119,14 +119,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         .nav-links {
-            background-color: #DAC0A3;
+            background-color: #A6D1E6;
 
         }
 
-        nav a {
-            color: #333;
-
-        }
+        
 
         .nav-links a:hover {
             border-bottom: 2px solid darkblue;
